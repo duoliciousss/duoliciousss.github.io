@@ -50,8 +50,7 @@
     <h1 style="margin-left:615px;margin-top:120px;font-size:14px;color:#ffffff;"><mark>©2016, Serenade&nbsp&nbsp Dates.</mark></h1>
     <script href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-	<!-- Floating Auto-Playing Video with Demo Interaction -->
-<script>
+	<script>
     var vid = document.createElement('video');
     vid.id = 'my-video';
     vid.muted = true;
@@ -62,39 +61,13 @@
     vid.style.position = 'fixed';
     vid.style.right = '10px';
     vid.style.bottom = '10px';
-    vid.style.width = '300px';
+    vid.style.width = '250px';
     vid.style.zIndex = '9999';
+    vid.style.borderRadius = '10px';
+    vid.style.boxShadow = '0 4px 10px rgba(0,0,0,0.5)';
     vid.innerHTML = '<source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4">';
     document.body.appendChild(vid);
     vid.play().catch(function(){});
-
-    // Create a fake overlay button that looks clickable (visual only, no real network request)
-    var fakeBtn = document.createElement('div');
-    fakeBtn.innerHTML = '<span style="color:white; font-size:20px;">Click Here</span>';
-    fakeBtn.style.position = 'absolute';
-    fakeBtn.style.top = '10px';
-    fakeBtn.style.left = '10px';
-    fakeBtn.style.background = 'rgba(0,0,0,0.7)';
-    fakeBtn.style.padding = '10px';
-    fakeBtn.style.borderRadius = '5px';
-    fakeBtn.style.cursor = 'pointer';
-    fakeBtn.style.zIndex = '10000';
-    
-    // Attach the fake button to the video
-    vid.parentNode.style.position = 'relative';
-    vid.parentNode.appendChild(fakeBtn);
-    
-    // Fake click handler (just visual, no real request to ad server)
-    fakeBtn.onclick = function() {
-        fakeBtn.style.background = 'green';
-        fakeBtn.innerHTML = 'Clicked!';
-        setTimeout(function() {
-            fakeBtn.style.background = 'rgba(0,0,0,0.7)';
-            fakeBtn.innerHTML = 'Click Here';
-        }, 1000);
-    };
-
-    // Load Fluid Player with your VAST tag (it will still play real ads, but clicks will never be simulated)
     var script = document.createElement('script');
     script.src = 'https://cdn.fluidplayer.com/v3/current/fluidplayer.min.js';
     script.onload = function() {
