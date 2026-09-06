@@ -18,7 +18,29 @@
         .btn { background: #d6336c; color: white; border: none; padding: 10px 20px; border-radius: 20px; cursor: pointer; margin-top: 10px; }
         .btn:hover { background: #b02a5b; }
 
-        /* Chat modal */
+        /* Assistant styles */
+        .assistant-btn { position: fixed; bottom: 20px; right: 20px; background: #d6336c; color: white; border: none; border-radius: 50%; width: 60px; height: 60px; font-size: 24px; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.3); z-index: 999; }
+        .assistant-modal { display: none; position: fixed; bottom: 90px; right: 20px; width: 350px; max-width: 90%; background: white; border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.3); z-index: 1000; overflow: hidden; }
+        .assistant-header { background: #d6336c; color: white; padding: 15px; font-weight: bold; }
+        .assistant-body { padding: 15px; max-height: 300px; overflow-y: auto; }
+        .assistant-msg { margin: 5px 0; padding: 8px 12px; border-radius: 10px; max-width: 80%; }
+        .assistant-msg.user { background: #d6336c; color: white; margin-left: auto; }
+        .assistant-msg.bot { background: #f0f0f0; }
+        .assistant-input { display: flex; padding: 10px; border-top: 1px solid #eee; }
+        .assistant-input input { flex: 1; padding: 8px; border: 1px solid #ccc; border-radius: 5px; }
+        .assistant-input button { background: #d6336c; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; margin-left: 5px; }
+        .choice-btn { display: block; width: 100%; padding: 10px; margin: 5px 0; background: #fff; border: 1px solid #d6336c; color: #d6336c; border-radius: 5px; cursor: pointer; text-align: left; }
+        .choice-btn:hover { background: #d6336c; color: white; }
+
+        /* Form styles */
+        .form-popup { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.3); width: 350px; max-width: 90%; z-index: 1000; }
+        .form-popup h3 { margin-top: 0; color: #d6336c; }
+        .form-popup label { display: block; margin: 10px 0 5px; font-weight: bold; }
+        .form-popup input, .form-popup select { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 5px; }
+        .form-popup button { margin-top: 15px; width: 100%; padding: 10px; background: #d6336c; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        .close-form { float: right; cursor: pointer; font-size: 20px; }
+
+        /* Chat styles */
         .chat-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; align-items: center; justify-content: center; }
         .chat-box { background: white; width: 400px; max-width: 90%; border-radius: 15px; padding: 20px; }
         .chat-header { background: #d6336c; color: white; padding: 10px; margin: -20px -20px 20px -20px; border-radius: 15px 15px 0 0; }
@@ -51,6 +73,40 @@
     <div class="grid" id="profilesContainer"></div>
 </div>
 
+<!-- Assistant Button -->
+<button class="assistant-btn" onclick="toggleAssistant()">💬</button>
+
+<!-- Assistant Modal -->
+<div class="assistant-modal" id="assistantModal">
+    <div class="assistant-header">Personal Match Assistant</div>
+    <div class="assistant-body" id="assistantBody"></div>
+    <div class="assistant-input">
+        <input type="text" id="assistantInput" placeholder="Ask anything...">
+        <button onclick="sendAssistant()">Send</button>
+    </div>
+</div>
+
+<!-- Form Popup -->
+<div class="form-popup" id="formPopup">
+    <span class="close-form" onclick="closeForm()">×</span>
+    <h3>Complete Your Profile</h3>
+    <label>Age:</label>
+    <input type="number" id="formAge" min="18" max="99">
+    <label>Hair Color:</label>
+    <select id="formColor">
+        <option value="">Select...</option>
+        <option value="blonde">Blonde</option>
+        <option value="brunette">Brunette</option>
+        <option value="black">Black</option>
+        <option value="red">Red</option>
+    </select>
+    <label>Weight (kg):</label>
+    <input type="number" id="formWeight" min="30" max="200">
+    <label>Height (cm):</label>
+    <input type="number" id="formHeight" min="140" max="220">
+    <button onclick="saveForm()">Save Profile</button>
+</div>
+
 <!-- Chat Modal -->
 <div class="chat-modal" id="chatModal">
     <div class="chat-box">
@@ -79,17 +135,19 @@
         { name: "Daniel, 31", bio: "Architect, history buff, wine enthusiast.", img: "https://picsum.photos/seed/user8/300/200" }
     ];
 
-    // Random replies
-    const replies = [
-        "Hey! How are you today?",
-        "Nice to meet you!",
-        "What's your favorite hobby?",
-        "I saw your profile and liked it.",
-        "Can we chat more?",
-        "That's cool! Tell me more.",
-        "I'm free this weekend.",
-        "Do you like movies?"
-    ];
+    // Assistant bot logic
+    const assistantReplies = {
+        "hello": "Hi! How can I help you find your perfect match today?",
+        "age": "What age range are you looking for? Choose: 18-25, 26-35, 36-45, or 45+",
+        "color": "What hair color do you prefer? Choose: Blonde, Brunette, Black, Red, or Any",
+        "weight": "What body type do you prefer? Choose: Slim, Average, Athletic, Curvy, or Any",
+        "height": "What height range do you prefer? Choose: Short (<170cm), Average (170-180cm), Tall (>180cm), or Any",
+        "form": "I can help you fill out your profile! Would you like to open the profile form? Choose: Yes or No",
+        "yes": "Opening the profile form now! Please fill in your details.",
+        "no": "Okay, no problem! Ask me anything else.",
+        "help": "I can help with: Age, Color, Weight, Height, Profile form, or say 'Hello'!",
+        "default": "I can help you with profile suggestions! Ask me about: age, color, weight, height, or type 'form' to open the profile form."
+    };
 
     // Shuffle function
     function shuffle(array) {
@@ -118,9 +176,110 @@
         });
     }
 
+    // Assistant functions
+    let assistantOpen = false;
+
+    function toggleAssistant() {
+        const modal = document.getElementById("assistantModal");
+        assistantOpen = !assistantOpen;
+        modal.style.display = assistantOpen ? "block" : "none";
+        if (assistantOpen) {
+            addAssistantMsg("bot", "Hi! I'm your Personal Match Assistant. Ask me about: age, color, weight, height, or type 'form' to open the profile form.");
+        }
+    }
+
+    function addAssistantMsg(sender, text) {
+        const body = document.getElementById("assistantBody");
+        const div = document.createElement("div");
+        div.className = "assistant-msg " + sender;
+        div.textContent = text;
+        body.appendChild(div);
+        body.scrollTop = body.scrollHeight;
+    }
+
+    function sendAssistant() {
+        const input = document.getElementById("assistantInput");
+        const text = input.value.trim().toLowerCase();
+        if (text === "") return;
+        addAssistantMsg("user", text);
+        input.value = "";
+
+        // Bot logic
+        setTimeout(() => {
+            let reply;
+            if (text.includes("hello") || text.includes("hi")) {
+                reply = assistantReplies["hello"];
+                addChoiceButtons(["Age", "Color", "Weight", "Height", "Form"]);
+            } else if (text.includes("age")) {
+                reply = assistantReplies["age"];
+                addChoiceButtons(["18-25", "26-35", "36-45", "45+"]);
+            } else if (text.includes("color")) {
+                reply = assistantReplies["color"];
+                addChoiceButtons(["Blonde", "Brunette", "Black", "Red", "Any"]);
+            } else if (text.includes("weight")) {
+                reply = assistantReplies["weight"];
+                addChoiceButtons(["Slim", "Average", "Athletic", "Curvy", "Any"]);
+            } else if (text.includes("height")) {
+                reply = assistantReplies["height"];
+                addChoiceButtons(["Short", "Average", "Tall", "Any"]);
+            } else if (text.includes("form") || text.includes("profile")) {
+                reply = assistantReplies["form"];
+                addChoiceButtons(["Yes", "No"]);
+            } else if (text === "yes") {
+                reply = assistantReplies["yes"];
+                openForm();
+            } else if (text === "no") {
+                reply = assistantReplies["no"];
+            } else if (text.includes("help")) {
+                reply = assistantReplies["help"];
+                addChoiceButtons(["Age", "Color", "Weight", "Height", "Form"]);
+            } else {
+                reply = assistantReplies["default"];
+                addChoiceButtons(["Age", "Color", "Weight", "Height", "Form"]);
+            }
+            addAssistantMsg("bot", reply);
+        }, 500);
+    }
+
+    function addChoiceButtons(choices) {
+        const body = document.getElementById("assistantBody");
+        choices.forEach(choice => {
+            const btn = document.createElement("button");
+            btn.className = "choice-btn";
+            btn.textContent = choice;
+            btn.onclick = function() {
+                document.getElementById("assistantInput").value = choice;
+                sendAssistant();
+            };
+            body.appendChild(btn);
+        });
+        body.scrollTop = body.scrollHeight;
+    }
+
+    // Form functions
+    function openForm() {
+        document.getElementById("formPopup").style.display = "block";
+    }
+
+    function closeForm() {
+        document.getElementById("formPopup").style.display = "none";
+    }
+
+    function saveForm() {
+        const age = document.getElementById("formAge").value;
+        const color = document.getElementById("formColor").value;
+        const weight = document.getElementById("formWeight").value;
+        const height = document.getElementById("formHeight").value;
+        if (!age || !color || !weight || !height) {
+            alert("Please fill all fields!");
+            return;
+        }
+        alert("Profile saved! Age: " + age + ", Hair: " + color + ", Weight: " + weight + "kg, Height: " + height + "cm");
+        closeForm();
+    }
+
     // Chat functions
     let currentChatName = "";
-    let chatMessages = [];
     let replyTimer = null;
 
     function openChat(name) {
@@ -128,8 +287,6 @@
         document.getElementById("chatName").textContent = name;
         document.getElementById("chatModal").style.display = "flex";
         document.getElementById("chatMessages").innerHTML = "";
-        chatMessages = [];
-        // Simulate initial message from profile
         setTimeout(() => {
             addMessage("profile", "Hi! I'm " + name.split(",")[0] + ". Nice to see you.");
         }, 500);
@@ -146,7 +303,6 @@
         msgDiv.textContent = text;
         document.getElementById("chatMessages").appendChild(msgDiv);
         document.getElementById("chatMessages").scrollTop = document.getElementById("chatMessages").scrollHeight;
-        chatMessages.push({ sender, text });
     }
 
     function sendChat() {
@@ -155,30 +311,26 @@
         if (text === "") return;
         addMessage("user", text);
         input.value = "";
-        // Simulate reply after 1-2 seconds
         clearTimeout(replyTimer);
         replyTimer = setTimeout(() => {
+            const replies = [
+                "Hey! How are you today?",
+                "Nice to meet you!",
+                "What's your favorite hobby?",
+                "I saw your profile and liked it.",
+                "Can we chat more?",
+                "That's cool! Tell me more.",
+                "I'm free this weekend.",
+                "Do you like movies?"
+            ];
             const randomReply = replies[Math.floor(Math.random() * replies.length)];
             addMessage("profile", randomReply);
         }, 1000 + Math.random() * 1000);
     }
 
-    // Daily message simulation
-    function checkDailyMessage() {
-        const today = new Date().toDateString();
-        const lastVisit = localStorage.getItem("serenade_lastVisit");
-        if (lastVisit !== today) {
-            // Show a simulated new message notification
-            const randomProfile = profiles[Math.floor(Math.random() * profiles.length)];
-            alert("You have a new message from " + randomProfile.name + "!");
-            localStorage.setItem("serenade_lastVisit", today);
-        }
-    }
-
     // Init
     window.onload = function() {
         loadProfiles();
-        checkDailyMessage();
     };
 </script>
 
