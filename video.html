@@ -27,11 +27,8 @@
 
     <script src="https://cdn.fluidplayer.com/v3/current/fluidplayer.min.js"></script>
     <script>
-        // Start the video
         var vid = document.getElementById("my-video");
         vid.play().catch(function(){});
-
-        // Initialize Fluid Player (for the ad)
         fluidPlayer('my-video', {
             vastOptions: {
                 adList: [{ roll: "preRoll", vastTag: "https://s.magsrv.com/v1/vast.php?idzone=6021516" }]
