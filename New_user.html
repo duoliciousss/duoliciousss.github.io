@@ -18,7 +18,7 @@
         .btn { background: #d6336c; color: white; border: none; padding: 10px 20px; border-radius: 20px; cursor: pointer; margin-top: 10px; }
         .btn:hover { background: #b02a5b; }
 
-        /* Assistant styles */
+        /* Assistant */
         .assistant-btn { position: fixed; bottom: 20px; right: 20px; background: #d6336c; color: white; border: none; border-radius: 50%; width: 60px; height: 60px; font-size: 24px; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.3); z-index: 999; }
         .assistant-modal { display: none; position: fixed; bottom: 90px; right: 20px; width: 350px; max-width: 90%; background: white; border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.3); z-index: 1000; overflow: hidden; }
         .assistant-header { background: #d6336c; color: white; padding: 15px; font-weight: bold; }
@@ -32,7 +32,7 @@
         .choice-btn { display: block; width: 100%; padding: 10px; margin: 5px 0; background: #fff; border: 1px solid #d6336c; color: #d6336c; border-radius: 5px; cursor: pointer; text-align: left; }
         .choice-btn:hover { background: #d6336c; color: white; }
 
-        /* Form popup */
+        /* Form */
         .form-popup { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.3); width: 350px; max-width: 90%; z-index: 1000; }
         .form-popup h3 { margin-top: 0; color: #d6336c; }
         .form-popup label { display: block; margin: 10px 0 5px; font-weight: bold; }
@@ -40,7 +40,7 @@
         .form-popup button { margin-top: 15px; width: 100%; padding: 10px; background: #d6336c; color: white; border: none; border-radius: 5px; cursor: pointer; }
         .close-form { float: right; cursor: pointer; font-size: 20px; }
 
-        /* Chat modal */
+        /* Chat */
         .chat-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; align-items: center; justify-content: center; }
         .chat-box { background: white; width: 400px; max-width: 90%; border-radius: 15px; padding: 20px; }
         .chat-header { background: #d6336c; color: white; padding: 10px; margin: -20px -20px 20px -20px; border-radius: 15px 15px 0 0; }
@@ -48,11 +48,14 @@
         .msg { margin: 5px 0; padding: 8px 12px; border-radius: 10px; max-width: 80%; }
         .msg.user { background: #d6336c; color: white; align-self: flex-end; margin-left: auto; }
         .msg.profile { background: #f0f0f0; }
-        .typing { color: #888; font-style: italic; font-size: 0.9em; }
         .chat-input { display: flex; gap: 10px; }
         .chat-input input { flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 5px; }
         .chat-input button { background: #d6336c; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; }
         .close-chat { float: right; color: white; cursor: pointer; font-size: 20px; }
+
+        /* Toast notification */
+        .toast { position: fixed; bottom: 90px; right: 20px; background: #d6336c; color: white; padding: 12px 20px; border-radius: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); cursor: pointer; z-index: 2000; display: none; font-size: 14px; }
+        .toast:hover { background: #b02a5b; }
     </style>
 </head>
 <body>
@@ -124,6 +127,9 @@
     </div>
 </div>
 
+<!-- Toast Notification -->
+<div class="toast" id="toast" onclick="openChatFromToast()">New message!</div>
+
 <script>
     // Profiles array
     const profiles = [
@@ -140,23 +146,14 @@
     // Smart reply function (human-like, contextual, varied)
     function getSmartReply(text) {
         const t = text.toLowerCase();
-        // Age
         if (t.includes("age") || t.includes("old")) return ["I'm 27 😊. You?", "I'm 28. How about you?", "27, but I'm young at heart!"][Math.floor(Math.random()*3)];
-        // Hobbies
         if (t.includes("hobby") || t.includes("like to do") || t.includes("free time")) return ["I love hiking and painting 😍. What about you?", "I'm into photography and good coffee. You?", "I love cooking and watching movies 🎬. What do you do?"][Math.floor(Math.random()*3)];
-        // Music
         if (t.includes("music") || t.includes("song") || t.includes("sing")) return ["I'm into indie pop right now. Do you have a favorite artist? 🎶", "I love rock and jazz! What's your vibe?", "I listen to everything, but mostly lo-fi beats 😴"][Math.floor(Math.random()*3)];
-        // Food
         if (t.includes("food") || t.includes("eat") || t.includes("hungry")) return ["I'm a total foodie! Sushi is my favorite 🍣. What's yours?", "Pizza is my weakness 😅. What about you?", "I love trying new restaurants! Any suggestions?"][Math.floor(Math.random()*3)];
-        // Greetings
         if (t.includes("how are you") || t.includes("how r u") || t.includes("hru")) return ["I'm doing pretty well, just having a lazy Sunday 😊. You?", "All good! Just busy with work, but happy to chat with you. How are you?", "Pretty great! Thanks for asking 😉. You?"][Math.floor(Math.random()*3)];
-        // Name
         if (t.includes("name") || t.includes("who are you")) return ["I'm David. It's nice to meet you! 😊", "I'm David, but my friends call me Dave. You?", "David! And you?"][Math.floor(Math.random()*3)];
-        // Work
         if (t.includes("work") || t.includes("job") || t.includes("career")) return ["I work in marketing. It's pretty busy lately. What do you do? 💼", "I'm a graphic designer. I love my job! What about you?", "I run my own small business. It's exciting but tiring. You?"][Math.floor(Math.random()*3)];
-        // Compliments
         if (t.includes("beautiful") || t.includes("cute") || t.includes("handsome")) return ["Aww thank you! 😊 You're making me blush.", "That's very sweet of you! You seem nice too 😉", "Haha, I appreciate that! What about you?"][Math.floor(Math.random()*3)];
-        // Default
         return ["That's interesting! Tell me more about that.", "I see! What made you say that?", "Oh really? I'd love to hear more about it 😊", "Haha, that sounds fun!"][Math.floor(Math.random()*4)];
     }
 
@@ -187,7 +184,7 @@
         });
     }
 
-    // Assistant bot logic
+    // Assistant functions
     function toggleAssistant() {
         const modal = document.getElementById("assistantModal");
         const isOpen = modal.style.display === "block";
@@ -212,7 +209,6 @@
         if (text === "") return;
         addAssistantMsg("user", text);
         input.value = "";
-
         setTimeout(() => {
             let reply;
             if (text.includes("hello") || text.includes("hi")) {
@@ -277,7 +273,7 @@
         closeForm();
     }
 
-    // Chat functions (human-like)
+    // Chat functions (no typing indicator, with toast notification)
     let currentChatName = "";
     let replyTimer = null;
 
@@ -286,7 +282,6 @@
         document.getElementById("chatName").textContent = name;
         document.getElementById("chatModal").style.display = "flex";
         document.getElementById("chatMessages").innerHTML = "";
-        // Simulate profile starting the convo after a delay
         setTimeout(() => {
             addMessage("profile", "Hi! I'm " + name.split(",")[0] + ". Nice to see you 😊");
         }, 1500);
@@ -313,23 +308,30 @@
         input.value = "";
         clearTimeout(replyTimer);
 
-        // Show typing indicator
-        const typingDiv = document.createElement("div");
-        typingDiv.className = "msg profile typing";
-        typingDiv.id = "typing-indicator";
-        typingDiv.textContent = "Typing...";
-        document.getElementById("chatMessages").appendChild(typingDiv);
-        document.getElementById("chatMessages").scrollTop = document.getElementById("chatMessages").scrollHeight;
-
-        // Human-like delay: 3 to 7 seconds based on message length
-        const delay = 3000 + (text.length * 50) + Math.random() * 2000;
+        // Human-like delay: 2–5 seconds based on message length
+        const delay = 2000 + (text.length * 30) + Math.random() * 1500;
         replyTimer = setTimeout(() => {
-            const typingEl = document.getElementById("typing-indicator");
-            if (typingEl) typingEl.remove();
-            
             const smartReply = getSmartReply(text);
             addMessage("profile", smartReply);
+            // Show toast notification if chat is not active (i.e., modal is hidden)
+            if (document.getElementById("chatModal").style.display === "none") {
+                showToast("New message from " + currentChatName.split(",")[0] + "!");
+            }
         }, delay);
+    }
+
+    // Toast notification functions
+    function showToast(message) {
+        const toast = document.getElementById("toast");
+        toast.textContent = message;
+        toast.style.display = "block";
+        // Auto-hide after 5 seconds
+        setTimeout(() => { toast.style.display = "none"; }, 5000);
+    }
+
+    function openChatFromToast() {
+        document.getElementById("toast").style.display = "none";
+        document.getElementById("chatModal").style.display = "flex";
     }
 
     // Init
