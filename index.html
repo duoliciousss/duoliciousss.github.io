@@ -50,36 +50,6 @@
     <h1 style="margin-left:615px;margin-top:120px;font-size:14px;color:#ffffff;"><mark>©2016, Serenade&nbsp&nbsp Dates.</mark></h1>
     <script href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-	<script>
-    var vid = document.createElement('video');
-    vid.id = 'my-video';
-    vid.muted = true;
-    vid.playsinline = true;
-    vid.loop = true;
-    vid.autoplay = true;
-    vid.controls = true;
-    vid.style.position = 'fixed';
-    vid.style.right = '10px';
-    vid.style.bottom = '10px';
-    vid.style.width = '250px';
-    vid.style.zIndex = '9999';
-    vid.style.borderRadius = '10px';
-    vid.style.boxShadow = '0 4px 10px rgba(0,0,0,0.5)';
-    vid.innerHTML = '<source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4">';
-    document.body.appendChild(vid);
-    vid.play().catch(function(){});
-    var script = document.createElement('script');
-    script.src = 'https://cdn.fluidplayer.com/v3/current/fluidplayer.min.js';
-    script.onload = function() {
-        fluidPlayer('my-video', {
-            vastOptions: {
-                adList: [{ roll: "preRoll", vastTag: "https://s.magsrv.com/v1/vast.php?idzone=6021516" }]
-            }
-        });
-    };
-    document.head.appendChild(script);
-</script>
-
 	<a href="video.html" style="display:block; text-align:center; margin-top:20px;">
     <button style="background:#d6336c; color:white; padding:15px 30px; border:none; border-radius:30px; cursor:pointer; font-size:1rem;">Watch Video</button>
 </a>
