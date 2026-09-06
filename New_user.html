@@ -17,6 +17,19 @@
         .card p { color: #777; font-size: 0.9rem; }
         .btn { background: #d6336c; color: white; border: none; padding: 10px 20px; border-radius: 20px; cursor: pointer; margin-top: 10px; }
         .btn:hover { background: #b02a5b; }
+
+        /* Chat modal */
+        .chat-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; align-items: center; justify-content: center; }
+        .chat-box { background: white; width: 400px; max-width: 90%; border-radius: 15px; padding: 20px; }
+        .chat-header { background: #d6336c; color: white; padding: 10px; margin: -20px -20px 20px -20px; border-radius: 15px 15px 0 0; }
+        .chat-messages { max-height: 300px; overflow-y: auto; margin-bottom: 10px; }
+        .msg { margin: 5px 0; padding: 8px 12px; border-radius: 10px; max-width: 80%; }
+        .msg.user { background: #d6336c; color: white; align-self: flex-end; margin-left: auto; }
+        .msg.profile { background: #f0f0f0; }
+        .chat-input { display: flex; gap: 10px; }
+        .chat-input input { flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 5px; }
+        .chat-input button { background: #d6336c; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; }
+        .close-chat { float: right; color: white; cursor: pointer; font-size: 20px; }
     </style>
 </head>
 <body>
@@ -38,8 +51,23 @@
     <div class="grid" id="profilesContainer"></div>
 </div>
 
+<!-- Chat Modal -->
+<div class="chat-modal" id="chatModal">
+    <div class="chat-box">
+        <div class="chat-header">
+            <span id="chatName"></span>
+            <span class="close-chat" onclick="closeChat()">×</span>
+        </div>
+        <div class="chat-messages" id="chatMessages"></div>
+        <div class="chat-input">
+            <input type="text" id="chatInput" placeholder="Type a message...">
+            <button onclick="sendChat()">Send</button>
+        </div>
+    </div>
+</div>
+
 <script>
-    // Array of demo profiles
+    // Profiles array
     const profiles = [
         { name: "Sarah, 26", bio: "Loves hiking, photography, and good coffee.", img: "https://picsum.photos/seed/user1/300/200" },
         { name: "James, 28", bio: "Gym enthusiast, movie lover, weekend traveler.", img: "https://picsum.photos/seed/user2/300/200" },
@@ -49,6 +77,18 @@
         { name: "David, 29", bio: "Entrepreneur, sports fan, night owl.", img: "https://picsum.photos/seed/user6/300/200" },
         { name: "Sophia, 25", bio: "Musician, cat lover, weekend baker.", img: "https://picsum.photos/seed/user7/300/200" },
         { name: "Daniel, 31", bio: "Architect, history buff, wine enthusiast.", img: "https://picsum.photos/seed/user8/300/200" }
+    ];
+
+    // Random replies
+    const replies = [
+        "Hey! How are you today?",
+        "Nice to meet you!",
+        "What's your favorite hobby?",
+        "I saw your profile and liked it.",
+        "Can we chat more?",
+        "That's cool! Tell me more.",
+        "I'm free this weekend.",
+        "Do you like movies?"
     ];
 
     // Shuffle function
@@ -64,7 +104,7 @@
     function loadProfiles() {
         const container = document.getElementById("profilesContainer");
         const shuffledProfiles = shuffle(profiles);
-
+        container.innerHTML = "";
         shuffledProfiles.forEach(profile => {
             const card = document.createElement("div");
             card.className = "card";
@@ -72,19 +112,74 @@
                 <img src="${profile.img}" alt="${profile.name}">
                 <h3>${profile.name}</h3>
                 <p>${profile.bio}</p>
-                <button class="btn" onclick="sendMessage('${profile.name}')">Connect</button>
+                <button class="btn" onclick="openChat('${profile.name}')">Connect</button>
             `;
             container.appendChild(card);
         });
     }
 
-    // Simulate sending a message
-    function sendMessage(name) {
-        alert("Message sent to " + name + "!");
+    // Chat functions
+    let currentChatName = "";
+    let chatMessages = [];
+    let replyTimer = null;
+
+    function openChat(name) {
+        currentChatName = name;
+        document.getElementById("chatName").textContent = name;
+        document.getElementById("chatModal").style.display = "flex";
+        document.getElementById("chatMessages").innerHTML = "";
+        chatMessages = [];
+        // Simulate initial message from profile
+        setTimeout(() => {
+            addMessage("profile", "Hi! I'm " + name.split(",")[0] + ". Nice to see you.");
+        }, 500);
     }
 
-    // Run on page load
-    window.onload = loadProfiles;
+    function closeChat() {
+        document.getElementById("chatModal").style.display = "none";
+        clearTimeout(replyTimer);
+    }
+
+    function addMessage(sender, text) {
+        const msgDiv = document.createElement("div");
+        msgDiv.className = "msg " + sender;
+        msgDiv.textContent = text;
+        document.getElementById("chatMessages").appendChild(msgDiv);
+        document.getElementById("chatMessages").scrollTop = document.getElementById("chatMessages").scrollHeight;
+        chatMessages.push({ sender, text });
+    }
+
+    function sendChat() {
+        const input = document.getElementById("chatInput");
+        const text = input.value.trim();
+        if (text === "") return;
+        addMessage("user", text);
+        input.value = "";
+        // Simulate reply after 1-2 seconds
+        clearTimeout(replyTimer);
+        replyTimer = setTimeout(() => {
+            const randomReply = replies[Math.floor(Math.random() * replies.length)];
+            addMessage("profile", randomReply);
+        }, 1000 + Math.random() * 1000);
+    }
+
+    // Daily message simulation
+    function checkDailyMessage() {
+        const today = new Date().toDateString();
+        const lastVisit = localStorage.getItem("serenade_lastVisit");
+        if (lastVisit !== today) {
+            // Show a simulated new message notification
+            const randomProfile = profiles[Math.floor(Math.random() * profiles.length)];
+            alert("You have a new message from " + randomProfile.name + "!");
+            localStorage.setItem("serenade_lastVisit", today);
+        }
+    }
+
+    // Init
+    window.onload = function() {
+        loadProfiles();
+        checkDailyMessage();
+    };
 </script>
 
 </body>
