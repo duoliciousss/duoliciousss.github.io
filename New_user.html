@@ -143,18 +143,64 @@
         { name: "Daniel, 31", bio: "Architect, history buff, wine enthusiast.", img: "https://picsum.photos/seed/user8/300/200" }
     ];
 
-    // Smart reply function (human-like, contextual, varied)
-    function getSmartReply(text) {
+    // Large pool of varied, realistic replies
+    const replyPool = [
+        "Hey! Sorry I was away for a bit. How's your day going?",
+        "I'm good, just got back from work. What about you?",
+        "That sounds really interesting! Tell me more.",
+        "Haha, I totally get that!",
+        "I was just thinking about you! What a coincidence.",
+        "Sorry, I'm a terrible texter. I'm here now though!",
+        "I'm in the middle of something, but I wanted to reply. Talk later?",
+        "Oh nice! I'd love to hear more about that.",
+        "That's so funny, I was literally talking about that today.",
+        "I just saw your message, sorry for the wait. How are you?",
+        "What are you up to right now?",
+        "I'd love to grab a coffee sometime. Are you free this week?",
+        "I hope you're having a good day!",
+        "I'm not sure about that, what do you think?",
+        "You seem really interesting. What are you passionate about?",
+        "I've been really busy lately, but I'm making time for you.",
+        "That's a good question... let me think about it.",
+        "You made me smile!",
+        "I'm jealous, I wish I was there!",
+        "Let's do that soon!",
+        "I'm a bit shy at first, but I warm up quickly.",
+        "I just ate a really good burger, you'd love it.",
+        "Do you believe in love at first sight?",
+        "I'm actually taking a break from my phone. This is the first time I've checked in hours.",
+        "I'll reply soon, just need to finish something up!"
+    ];
+
+    // Contextual replies for specific keywords
+    function getContextReply(text) {
         const t = text.toLowerCase();
-        if (t.includes("age") || t.includes("old")) return ["I'm 27 😊. You?", "I'm 28. How about you?", "27, but I'm young at heart!"][Math.floor(Math.random()*3)];
-        if (t.includes("hobby") || t.includes("like to do") || t.includes("free time")) return ["I love hiking and painting 😍. What about you?", "I'm into photography and good coffee. You?", "I love cooking and watching movies 🎬. What do you do?"][Math.floor(Math.random()*3)];
-        if (t.includes("music") || t.includes("song") || t.includes("sing")) return ["I'm into indie pop right now. Do you have a favorite artist? 🎶", "I love rock and jazz! What's your vibe?", "I listen to everything, but mostly lo-fi beats 😴"][Math.floor(Math.random()*3)];
-        if (t.includes("food") || t.includes("eat") || t.includes("hungry")) return ["I'm a total foodie! Sushi is my favorite 🍣. What's yours?", "Pizza is my weakness 😅. What about you?", "I love trying new restaurants! Any suggestions?"][Math.floor(Math.random()*3)];
-        if (t.includes("how are you") || t.includes("how r u") || t.includes("hru")) return ["I'm doing pretty well, just having a lazy Sunday 😊. You?", "All good! Just busy with work, but happy to chat with you. How are you?", "Pretty great! Thanks for asking 😉. You?"][Math.floor(Math.random()*3)];
-        if (t.includes("name") || t.includes("who are you")) return ["I'm David. It's nice to meet you! 😊", "I'm David, but my friends call me Dave. You?", "David! And you?"][Math.floor(Math.random()*3)];
-        if (t.includes("work") || t.includes("job") || t.includes("career")) return ["I work in marketing. It's pretty busy lately. What do you do? 💼", "I'm a graphic designer. I love my job! What about you?", "I run my own small business. It's exciting but tiring. You?"][Math.floor(Math.random()*3)];
-        if (t.includes("beautiful") || t.includes("cute") || t.includes("handsome")) return ["Aww thank you! 😊 You're making me blush.", "That's very sweet of you! You seem nice too 😉", "Haha, I appreciate that! What about you?"][Math.floor(Math.random()*3)];
-        return ["That's interesting! Tell me more about that.", "I see! What made you say that?", "Oh really? I'd love to hear more about it 😊", "Haha, that sounds fun!"][Math.floor(Math.random()*4)];
+        if (t.includes("age")) return ["I'm 27. You?", "28, but I feel 21!", "I'm 25. How about you?"][Math.floor(Math.random()*3)];
+        if (t.includes("hobby") || t.includes("like to do")) return ["I love hiking and painting. You?", "I'm into photography and cooking.", "I mostly watch movies and chill."][Math.floor(Math.random()*3)];
+        if (t.includes("music") || t.includes("song")) return ["I'm into indie pop right now.", "I like rock and jazz.", "I listen to lo-fi beats."][Math.floor(Math.random()*3)];
+        if (t.includes("food") || t.includes("eat")) return ["I'm a foodie! Sushi is my fav.", "Pizza is my weakness.", "I love trying new restaurants."][Math.floor(Math.random()*3)];
+        if (t.includes("how are you") || t.includes("hru")) return ["I'm doing well, just a lazy Sunday. You?", "I'm good! Busy but happy.", "Pretty great! Thanks for asking."][Math.floor(Math.random()*3)];
+        if (t.includes("name")) return ["I'm Michael. Nice to meet you!", "I'm David. What's your name?", "Sarah. You?"][Math.floor(Math.random()*3)];
+        if (t.includes("work") || t.includes("job")) return ["I work in marketing. What about you?", "I'm a designer. It's fun!", "I run my own business."][Math.floor(Math.random()*3)];
+        return null;
+    }
+
+    // Get a unique reply (not repeated)
+    function getUniqueReply(userName) {
+        // Get previously used replies for this user
+        const used = JSON.parse(localStorage.getItem("usedReplies_" + userName) || "[]");
+        // Filter pool to find unused ones
+        const available = replyPool.filter(r => !used.includes(r));
+        if (available.length === 0) {
+            // Reset used list if all used
+            localStorage.removeItem("usedReplies_" + userName);
+            return replyPool[0];
+        }
+        const reply = available[Math.floor(Math.random() * available.length)];
+        // Save used reply
+        used.push(reply);
+        localStorage.setItem("usedReplies_" + userName, JSON.stringify(used));
+        return reply;
     }
 
     // Shuffle function
@@ -184,7 +230,7 @@
         });
     }
 
-    // Assistant functions
+    // Assistant functions (unchanged)
     function toggleAssistant() {
         const modal = document.getElementById("assistantModal");
         const isOpen = modal.style.display === "block";
@@ -224,21 +270,18 @@
                 reply = "What body type do you prefer? Choose: Slim, Average, Athletic, Curvy, or Any";
                 addChoiceButtons(["Slim", "Average", "Athletic", "Curvy", "Any"]);
             } else if (text.includes("height")) {
-                reply = "What height range do you prefer? Choose: Short (<170cm), Average (170-180cm), Tall (>180cm), or Any";
+                reply = "What height range do you prefer? Choose: Short, Average, Tall, or Any";
                 addChoiceButtons(["Short", "Average", "Tall", "Any"]);
             } else if (text.includes("form") || text.includes("profile")) {
                 reply = "I can help you fill out your profile! Would you like to open the profile form? Choose: Yes or No";
                 addChoiceButtons(["Yes", "No"]);
             } else if (text === "yes") {
-                reply = "Opening the profile form now! Please fill in your details.";
+                reply = "Opening the profile form now!";
                 openForm();
             } else if (text === "no") {
-                reply = "Okay, no problem! Ask me anything else.";
-            } else if (text.includes("help")) {
-                reply = "I can help with: Age, Color, Weight, Height, Profile form, or say 'Hello'!";
-                addChoiceButtons(["Age", "Color", "Weight", "Height", "Form"]);
+                reply = "Okay, no problem!";
             } else {
-                reply = "I can help you with profile suggestions! Ask me about: age, color, weight, height, or type 'form' to open the profile form.";
+                reply = "I can help with: Age, Color, Weight, Height, or Profile form.";
                 addChoiceButtons(["Age", "Color", "Weight", "Height", "Form"]);
             }
             addAssistantMsg("bot", reply);
@@ -260,7 +303,6 @@
         body.scrollTop = body.scrollHeight;
     }
 
-    // Form functions
     function openForm() { document.getElementById("formPopup").style.display = "block"; }
     function closeForm() { document.getElementById("formPopup").style.display = "none"; }
     function saveForm() {
@@ -269,27 +311,29 @@
         const weight = document.getElementById("formWeight").value;
         const height = document.getElementById("formHeight").value;
         if (!age || !color || !weight || !height) { alert("Please fill all fields!"); return; }
-        alert("Profile saved! Age: " + age + ", Hair: " + color + ", Weight: " + weight + "kg, Height: " + height + "cm");
+        alert("Profile saved!");
         closeForm();
     }
 
-    // Chat functions (no typing indicator, with toast notification)
+    // CHAT FUNCTIONS
     let currentChatName = "";
-    let replyTimer = null;
 
     function openChat(name) {
         currentChatName = name;
         document.getElementById("chatName").textContent = name;
         document.getElementById("chatModal").style.display = "flex";
-        document.getElementById("chatMessages").innerHTML = "";
-        setTimeout(() => {
-            addMessage("profile", "Hi! I'm " + name.split(",")[0] + ". Nice to see you 😊");
-        }, 1500);
+        loadConversation(name);
+        // If new chat, add initial message
+        if (!localStorage.getItem("chat_" + name)) {
+            setTimeout(() => {
+                addMessage("profile", "Hi! I'm " + name.split(",")[0] + " 😊");
+            }, 500);
+        }
     }
 
     function closeChat() {
         document.getElementById("chatModal").style.display = "none";
-        clearTimeout(replyTimer);
+        checkForReplies(); // Check for pending replies when closing
     }
 
     function addMessage(sender, text) {
@@ -306,26 +350,75 @@
         if (text === "") return;
         addMessage("user", text);
         input.value = "";
-        clearTimeout(replyTimer);
-
-        // Human-like delay: 2–5 seconds based on message length
-        const delay = 2000 + (text.length * 30) + Math.random() * 1500;
-        replyTimer = setTimeout(() => {
-            const smartReply = getSmartReply(text);
-            addMessage("profile", smartReply);
-            // Show toast notification if chat is not active (i.e., modal is hidden)
-            if (document.getElementById("chatModal").style.display === "none") {
-                showToast("New message from " + currentChatName.split(",")[0] + "!");
-            }
-        }, delay);
+        saveMessage("user", text);
+        
+        // Set a random delay: 30 seconds, 1 minute, 1 hour, or up to 24 hours
+        const delays = [30 * 1000, 60 * 1000, 60 * 60 * 1000, 2 * 60 * 60 * 1000, 12 * 60 * 60 * 1000, 24 * 60 * 60 * 1000];
+        const randomDelay = delays[Math.floor(Math.random() * delays.length)];
+        const replyTime = Date.now() + randomDelay;
+        localStorage.setItem("replyTime_" + currentChatName, replyTime);
     }
 
-    // Toast notification functions
+    function saveMessage(sender, text) {
+        const key = "chat_" + currentChatName;
+        let messages = JSON.parse(localStorage.getItem(key) || "[]");
+        messages.push({ sender, text, time: Date.now() });
+        localStorage.setItem(key, JSON.stringify(messages));
+    }
+
+    function loadConversation(name) {
+        const key = "chat_" + name;
+        const messages = JSON.parse(localStorage.getItem(key) || "[]");
+        document.getElementById("chatMessages").innerHTML = "";
+        messages.forEach(msg => {
+            addMessage(msg.sender, msg.text);
+        });
+    }
+
+    // Check for any pending replies (called on page load and when closing chat)
+    function checkForReplies() {
+        profiles.forEach(profile => {
+            const name = profile.name;
+            const replyTime = parseInt(localStorage.getItem("replyTime_" + name) || "0");
+            if (replyTime && Date.now() >= replyTime) {
+                // Time to reply! Generate a unique reply
+                const contextReply = getContextReply(lastUserMessage[name] || "");
+                const reply = contextReply || getUniqueReply(name);
+                
+                // Save reply to conversation
+                const key = "chat_" + name;
+                let messages = JSON.parse(localStorage.getItem(key) || "[]");
+                messages.push({ sender: "profile", text: reply, time: Date.now() });
+                localStorage.setItem(key, JSON.stringify(messages));
+                
+                // Clear pending time
+                localStorage.removeItem("replyTime_" + name);
+                
+                // Show toast if chat is closed
+                if (document.getElementById("chatModal").style.display === "none") {
+                    showToast("New message from " + name.split(",")[0] + "!");
+                }
+            }
+        });
+    }
+
+    // Store last user message for context (improves reply relevance)
+    const lastUserMessage = {};
+
+    // Override saveMessage to track last message
+    const originalSaveMessage = saveMessage;
+    saveMessage = function(sender, text) {
+        originalSaveMessage(sender, text);
+        if (sender === "user") {
+            lastUserMessage[currentChatName] = text;
+        }
+    };
+
+    // Toast functions
     function showToast(message) {
         const toast = document.getElementById("toast");
         toast.textContent = message;
         toast.style.display = "block";
-        // Auto-hide after 5 seconds
         setTimeout(() => { toast.style.display = "none"; }, 5000);
     }
 
@@ -337,6 +430,9 @@
     // Init
     window.onload = function() {
         loadProfiles();
+        checkForReplies(); // Check for any pending replies when page loads
+        // Check periodically for due replies (every 30 seconds)
+        setInterval(checkForReplies, 30000);
     };
 </script>
 
