@@ -20,13 +20,12 @@
 
     <div class="content">
         <h1>Welcome to the video page</h1>
-        <p>This is your normal content. The video stays small on the right.</p>
+        <p>The video is in the corner.</p>
     </div>
 
-    <!-- Floating Video (SMALL) -->
+    <!-- Simple Small Floating Video (No Fluid Player) -->
     <script>
         var vid = document.createElement('video');
-        vid.id = 'my-video';
         vid.muted = true;
         vid.playsinline = true;
         vid.loop = true;
@@ -42,16 +41,6 @@
         vid.innerHTML = '<source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4">';
         document.body.appendChild(vid);
         vid.play().catch(function(){});
-        var script = document.createElement('script');
-        script.src = 'https://cdn.fluidplayer.com/v3/current/fluidplayer.min.js';
-        script.onload = function() {
-            fluidPlayer('my-video', {
-                vastOptions: {
-                    adList: [{ roll: "preRoll", vastTag: "https://s.magsrv.com/v1/vast.php?idzone=6021516" }]
-                }
-            });
-        };
-        document.head.appendChild(script);
     </script>
 
 </body>
