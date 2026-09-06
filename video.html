@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video with Ads</title>
+</head>
+<body>
+
+    <h1>Watch this video</h1>
+
+    <!-- Load the player -->
+    <script src="https://cdn.fluidplayer.com/v3/current/fluidplayer.min.js"></script>
+
+    <!-- Your video element -->
+    <video id="my-video" controls style="width: 100%; height: auto;">
+        <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4" />
+    </video>
+
+    <!-- Configure the player with your VAST tag -->
+    <script>
+        var testVideo = fluidPlayer('my-video', {
+            vastOptions: {
+                adList: [
+                    {
+                        roll: "preRoll",
+                        vastTag: "https://s.magsrv.com/v1/vast.php?idzone=6021516"
+                    }
+                ]
+            }
+        });
+    </script>
+
+</body>
+</html>
