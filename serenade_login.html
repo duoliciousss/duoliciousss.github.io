@@ -55,3 +55,34 @@
       <div class="col-md-6">
          <h3 style="margin-left:220px;margin-top:200px;font-size:40px;font-family:Oswald;"><b>" YOU FALL &nbspIN LOVE<br>&nbsp&nbsp&nbsp&nbsp&nbspWITH THE MOST<br>UNEXPECTED PERSON<br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspAT THE MOST<br>&nbsp&nbspUNEXPECTED TIME "</b></h3>
       </div>
+
+	   <script>
+document.addEventListener("DOMContentLoaded", function() {
+    var links = [
+        { url: "https://s.pemsrv.com/v1/link.php?cat=&idzone=6021648&type=8", text: "🔥 Hot Singles Near You" },
+        { url: "https://s.pemsrv.com/v1/link.php?cat=&idzone=6021652&type=8", text: "💘 Find Your Match" },
+        { url: "https://s.pemsrv.com/v1/link.php?cat=&idzone=6021654&type=8", text: "💬 Chat Now" },
+        { url: "https://s.pemsrv.com/v1/link.php?cat=&idzone=6021656&type=8", text: "🎁 Free Bonus" }
+    ];
+    
+    var div = document.createElement("div");
+    div.style.cssText = "text-align:center; margin-top:50px; padding:20px; background:#f5f5f5; border-top:1px solid #ddd;";
+    
+    var heading = document.createElement("p");
+    heading.textContent = "✨ Explore More ✨";
+    heading.style.cssText = "font-size:16px; color:#d6336c; font-weight:bold; margin-bottom:10px;";
+    div.appendChild(heading);
+    
+    links.forEach(function(item) {
+        var a = document.createElement("a");
+        a.href = item.url;
+        a.target = "_blank";
+        a.rel = "noopener";
+        a.style.cssText = "display:inline-block; background:#d6336c; color:#fff; padding:10px 20px; border-radius:25px; text-decoration:none; font-weight:bold; font-size:14px; margin:5px; box-shadow:0 4px 10px rgba(0,0,0,0.2);";
+        a.textContent = item.text;
+        div.appendChild(a);
+    });
+    
+    document.body.appendChild(div);
+});
+</script>
