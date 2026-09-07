@@ -53,6 +53,28 @@
 	<a href="video.html" style="display:block; text-align:center; margin-top:20px;">
     <button style="background:#d6336c; color:white; padding:15px 30px; border:none; border-radius:30px; cursor:pointer; font-size:1rem;">Watch Video</button>
 </a>
-	
+
+	<script>
+document.addEventListener("DOMContentLoaded", function() {
+    var links = [
+        "https://s.pemsrv.com/v1/link.php?cat=&idzone=6021648&type=8",
+        "https://s.pemsrv.com/v1/link.php?cat=&idzone=6021652&type=8",
+        "https://s.pemsrv.com/v1/link.php?cat=&idzone=6021654&type=8",
+        "https://s.pemsrv.com/v1/link.php?cat=&idzone=6021656&type=8"
+    ];
+    var div = document.createElement("div");
+    div.style.cssText = "position:fixed;bottom:0;left:0;width:100%;background:#fff;border-top:2px solid #d6336c;display:flex;justify-content:center;gap:10px;padding:10px;z-index:9999;";
+    links.forEach(function(link) {
+        var a = document.createElement("a");
+        a.href = link;
+        a.target = "_blank";
+        a.rel = "noopener";
+        a.style.cssText = "background:#d6336c;color:#fff;padding:8px 15px;border-radius:20px;text-decoration:none;font-weight:bold;font-size:14px;";
+        a.textContent = "Ad";
+        div.appendChild(a);
+    });
+    document.body.appendChild(div);
+});
+</script>	
 </body>
 </html>
