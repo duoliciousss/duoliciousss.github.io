@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Site Explanation</title>
+    <title>Video</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 0; background: #f5f5f5; }
+        body { font-family: Arial, sans-serif; margin: 0; background: #000; }
         .top-nav { background: #d6336c; padding: 15px; text-align: center; }
         .top-nav a { color: white; text-decoration: none; font-weight: bold; margin: 0 15px; }
-        .content { padding: 20px; }
-        video { width: 100%; max-width: 800px; display: block; margin: 20px auto; }
+        .video-wrap { margin-top: 50px; }
+        video { width: 100%; max-width: 800px; display: block; margin: 0 auto; }
     </style>
 </head>
 <body>
@@ -19,29 +19,16 @@
         <a href="New_user.html">Matches</a>
     </div>
 
-    <div class="content">
-        <h1>How to Use Serenade Dates</h1>
-        <p>Watch this video to learn how the site works.</p>
+    <div class="video-wrap">
+        <video id="my-video" controls playsinline style="width: 100%; max-width: 800px; display: block; margin: 0 auto;">
+            <source src="YOUR_VIDEO_URL.mp4" type="video/mp4">
+        </video>
     </div>
 
-    <video id="my-video" controls playsinline style="width: 100%; max-width: 800px; display: block; margin: 20px auto;">
-        <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
-    </video>
-
     <script>
-        // Auto-play with sound (needs user interaction for sound, so we'll start muted and then unmute on first interaction)
         var vid = document.getElementById("my-video");
-        vid.muted = false; // Allow sound
-        vid.play().catch(function() {
-            // If autoplay blocked, show a play button
-            vid.controls = true;
-        });
-
-        // Try to unmute on first click
-        document.addEventListener("click", function() {
-            vid.muted = false;
-            vid.play().catch(function(){});
-        });
+        vid.muted = false;
+        vid.play().catch(function(){ vid.controls = true; });
     </script>
 
 </body>
