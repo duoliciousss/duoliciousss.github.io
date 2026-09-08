@@ -27,9 +27,23 @@
         display: inline-block;
         margin: 2px;
     }
+    .close-footer {
+        position: absolute;
+        top: -10px;
+        right: 10px;
+        background: #d6336c;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 25px;
+        height: 25px;
+        cursor: pointer;
+        font-size: 14px;
+    }
 </style>
 
-<div class="sticky-footer">
+<div class="sticky-footer" id="stickyFooter">
+    <button class="close-footer" onclick="document.getElementById('stickyFooter').style.display='none';">×</button>
     <a href="https://boussedraoui.github.io/Multitool-Pro-Full-Complete/">🔥 MultiTool</a>
     <a href="https://boussedraoui.github.io/multitool-pro-cordova">⚙️ Cordova</a>
     <a href="https://boussedraoui.github.io/">🏠 Main</a>
@@ -46,7 +60,6 @@
     <a href="https://www.amazon.com/gp/product/B0HCRGNB87">📦 Amazon 4</a>
     <a href="https://duoliciousss.github.io">💘 Serenade</a>
 </div>
-
 
 	
 
