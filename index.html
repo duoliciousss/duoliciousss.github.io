@@ -114,6 +114,32 @@
 </div>
 
 	
-    
+
+
+	<script>
+document.addEventListener("DOMContentLoaded", function() {
+    var watchBtn = document.querySelector('a[href="video.html"]');
+
+    if (watchBtn) {
+        var adCard = document.createElement("a");
+        adCard.href = "https://sovrn.co/1kogorj";
+        adCard.target = "_blank";
+        adCard.style.cssText = "display:block; max-width:400px; width:90%; margin:20px auto; background:#fff; border-radius:15px; overflow:hidden; box-shadow:0 6px 20px rgba(0,0,0,0.2); text-decoration:none; transition:transform 0.2s;";
+        adCard.onmouseover = function() { adCard.style.transform = "scale(1.03)"; };
+        adCard.onmouseout  = function() { adCard.style.transform = "scale(1)"; };
+
+        adCard.innerHTML = `
+            <img src="https://i5.walmartimages.com/seo/MEROKEETY-Womens-V-Neck-Lace-Trim-Cute-Button-Top-Navy-L_6970f076-83ae-4524-8c05-e4e182a5c67a.915bb26e0326c06d43d4875318f52b10.jpeg?odnHeight=573&odnWidth=573&odnBg=FFFFFF"
+                 style="width:100%; height:auto; display:block;" alt="Product">
+            <div style="padding:12px; text-align:center;">
+                <div style="font-weight:bold; color:#333; font-size:16px;">MEROKEETY Women's V-Neck Lace Trim Top</div>
+                <div style="margin-top:6px; color:#d6336c; font-weight:bold; font-size:15px;">Shop Now →</div>
+            </div>
+        `;
+
+        watchBtn.parentNode.insertBefore(adCard, watchBtn);
+    }
+});
+</script>
 	</body>
 </html>
