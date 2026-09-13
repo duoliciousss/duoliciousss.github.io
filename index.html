@@ -108,5 +108,35 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 });
 </script>
+
+
+
+
+
+
+
+	<!-- Cookie Consent Banner -->
+<div id="cookieConsent" style="display:none; position:fixed; bottom:15px; right:15px; max-width:340px; width:90%; background:#1a1a1a; color:#fff; padding:16px 18px; border-radius:14px; box-shadow:0 8px 25px rgba(0,0,0,0.4); z-index:999999; font-family:Arial, sans-serif; font-size:13px; line-height:1.5; border:1px solid #d6336c;">
+    <div style="font-weight:bold; font-size:15px; margin-bottom:8px; color:#d6336c;">🍪 Cookies Notice</div>
+    <div style="color:#ddd;">We use cookies to improve your experience, analyze traffic, and serve relevant ads. By clicking <b>OK</b>, you agree to our use of cookies.</div>
+    <div style="text-align:right; margin-top:12px;">
+        <button id="cookieOkBtn" style="background:#d6336c; color:#fff; border:none; padding:9px 22px; border-radius:20px; font-weight:bold; font-size:13px; cursor:pointer;">OK</button>
+    </div>
+</div>
+
+<script>
+(function() {
+    var banner = document.getElementById('cookieConsent');
+    if (localStorage.getItem('cookieConsentOK') === 'true') {
+        banner.style.display = 'none';
+    } else {
+        banner.style.display = 'block';
+    }
+    document.getElementById('cookieOkBtn').addEventListener('click', function() {
+        localStorage.setItem('cookieConsentOK', 'true');
+        banner.style.display = 'none';
+    });
+})();
+</script>
 	</body>
 </html>
